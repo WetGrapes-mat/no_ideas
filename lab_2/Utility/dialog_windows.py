@@ -10,19 +10,10 @@ from kivymd.uix.button import MDFlatButton
 class DialogContent(BoxLayout):
     pass
 
-class InputDialogContent(DialogContent):
+class RenameDialogContent(DialogContent):
     pass
 
-class FilterDialogContent(DialogContent):
-    pass
-
-class DeleteDialogContent(DialogContent):
-    pass
-
-class UploadDialogContent(DialogContent):
-    pass
-
-class SaveDialogContent(DialogContent):
+class AccountDialogContent(DialogContent):
     pass
 
 
@@ -48,105 +39,34 @@ class DialogWindow(MDDialog):
         self.dismiss()
         self.model.close_dialog()
 
-
-class InputWindow(DialogWindow):
+class RenameWindow(DialogWindow):
     def __init__(self, **kwargs):
         super().__init__(
-                title="New student: ",
-                content_cls=InputDialogContent(),
-                mode="input",
-                model=kwargs["model"], 
-        )
-
-    
-    def close(self, obj):
-        self.dismiss()
-        self.model.close_dialog(
-            [
-                self.content_cls.ids.input_fio.text,
-                self.content_cls.ids.input_group.text,
-                self.content_cls.ids.input_sick.text,
-                self.content_cls.ids.input_skip.text,
-                self.content_cls.ids.input_other.text,
-            ]
-        )
-
-
-class FilterWindow(DialogWindow):
-    def __init__(self, **kwargs):
-        super().__init__(
-                title="Filter students: ",
-                content_cls=FilterDialogContent(),
-                mode="filter",
+                title="Change nickname: ",
+                content_cls=RenameDialogContent(),
+                mode="rename",
                 model=kwargs["model"],
         )
 
 
     def close(self, obj):
         self.dismiss()
-        self.model.close_dialog(
-            [
-                self.content_cls.ids.filter_fio.text,
-                self.content_cls.ids.filter_group.text,
-                self.content_cls.ids.filter_sick.text,
-                self.content_cls.ids.filter_skip.text,
-                self.content_cls.ids.filter_other.text,
-                self.content_cls.ids.filter_total.text,
-            ]
-        )
+        self.model.close_dialog(self.content_cls.ids.nickname.text)
 
 
-class DeleteWindow(DialogWindow):
+class AccountWindow(DialogWindow):
     def __init__(self, **kwargs):
         super().__init__(
-                title="Delete students: ",
-                content_cls=DeleteDialogContent(),
-                mode="delete",
-                model=kwargs["model"],
-        )
-
-    def close(self, obj):
-        self.dismiss()
-        self.model.close_dialog(
-            [
-                self.content_cls.ids.delete_fio.text,
-                self.content_cls.ids.delete_group.text,
-                self.content_cls.ids.delete_sick.text,
-                self.content_cls.ids.delete_skip.text,
-                self.content_cls.ids.delete_other.text,
-                self.content_cls.ids.delete_total.text,
-            ]
-        )
-
-
-class SaveWindow(DialogWindow):
-    def __init__(self, **kwargs):
-        super().__init__(
-                title="Saving: ",
-                content_cls=SaveDialogContent(),
-                mode="save",
+                title="Change acc: ",
+                content_cls=AccountDialogContent(),
+                mode="account",
                 model=kwargs["model"],
         )
 
 
     def close(self, obj):
         self.dismiss()
-        self.model.close_dialog(self.content_cls.ids.save_path.text)
-
-
-class UploadWindow(DialogWindow):
-    def __init__(self, **kwargs):
-        super().__init__(
-                title="Upload: ",
-                content_cls=UploadDialogContent(),
-                mode="upload",
-                model=kwargs["model"],
-        )
-
-
-    def close(self, obj):
-        self.dismiss()
-        self.model.close_dialog(self.content_cls.ids.upload_path.text)
+        self.model.close_dialog(self.content_cls.ids.acc_name.text)
 
 
 

@@ -31,40 +31,33 @@ class MyScreenView(MDScreen, Observer):
 
 
     def open_dialog(self, mode: str):
-        """ Call input, filter and delete windows, save and upload """
-        if mode == "input":
-            self.dialog = window.InputWindow(model=self.model)
-        elif mode == "filter":
-            self.dialog = window.FilterWindow(model=self.model)
-        elif mode == "delete":
-            self.dialog = window.DeleteWindow(model=self.model)
-        elif mode == "upload":
-            self.dialog = window.UploadWindow(model=self.model)
-        elif mode == "save":
-            self.dialog = window.SaveWindow(model=self.model)
+        if mode == "account":
+            self.dialog = window.AccountWindow(model=self.model)
+        elif mode == "rename":
+            self.dialog = window.RenameWindow(model=self.model)
 
         self.dialog.open()
         self.controller.dialog(mode, self.dialog)
         
 
     def close_dialog(self, dialog_data: list=[]):
-        if self.dialog.mode == "input":
-            self.controller.input_student(dialog_data)
-        elif self.dialog.mode == "filter":
-            self.controller.filter_students(dialog_data)
-        elif self.dialog.mode == "delete":
-            unlucky = self.controller.delete_students(dialog_data)
-            Snackbar(text=f"{unlucky} students are deleted!").open() 
-        elif self.dialog.mode == "upload":
-            self.controller.upload_from_file(dialog_data)
-        elif self.dialog.mode == "save":
-            self.controller.save_in_file(dialog_data)
-        self.dialog = None 
+        if self.dialog.mode == "account":
+            self.controller.change_account(dialog_data)
+        elif self.dialog.mode == "rename":
+            self.controller.change_nickname(dialog_data)
+        self.dialog = None
 
+    def play_is(self, obj):
+        self.controller.start_battle(1)
+
+    def play_t34(self, obj):
+        self.controller.start_battle(2)
+
+    def play_su(self, obj):
+        self.controller.start_battle(3)
 
     def model_is_changed(self, data):
         """ The method is called when the model changes. """
-
         self.close_dialog(data)
     
 
