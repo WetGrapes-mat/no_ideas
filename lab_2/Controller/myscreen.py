@@ -33,5 +33,8 @@ class MyScreenController:
     def change_nickname(self, data):
         self.model.write_data_in_file(path=data)
 
-    def start_buttle(self, tank):
-        self.model.server.start_battle(tank, self)
+    def start_battle(self, tank):
+        self.model.server.start_battle(tank)
+
+    def buy_tank(self, tank):
+        self.model.server.buy_tank(tank)
