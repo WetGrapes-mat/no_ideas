@@ -28,12 +28,13 @@ class MyScreenModel:
     _not_filtered = []
 
 
-    def __init__(self, table):
-        self.table = table
+    def __init__(self):
         self.dialog = None
         self._observers = []
+        self.s = Server()
+        self.player = s.get_player_list()[0]
 
-
+    # observers
     def add_observer(self, observer):
         self._observers.append(observer)
 
@@ -47,147 +48,37 @@ class MyScreenModel:
             x.model_is_changed(data)
 
 
-    def read_data_from_file(self, path):
-        try:
-            handler = SaxReader()
-            handler.parser.setContentHandler(handler)
-            handler.parser.parse("xml/"+path)
+    def choose_account(self, nick: str):
+        for i in range(len(self.s.get_player_list())):
+            if self.s.get_player_list()[i].get_nickname() == nick:
+                self.player = self.s.get_player_list()[i]
+                return True
+        return False
 
-            # print(handler.table_datas)
-            for data in handler.table_datas:
-                self.add_new_student_in_table(data)
-        except Exception as e:
-            pass 
+    def change_nickname(self, newnick: str):
+        return self.player.change_nickname(self.s, newnick)
 
+    def buy_tank(self, tank):
+        return self.player.buy_tank(self.s, tank)
 
-    @staticmethod
-    def create_empty_file(path):
-        try:
-            with open(path, 'w'):
-                pass
-            return True
-        except Exception as e:
-            return False 
+    def start_battle(self, tank):
+        return self.player.lets_battle(self.s)
 
 
-    def write_data_in_file(self, path: str):
-        path = "xml/"+path
-        if self.create_empty_file(path):
-            dom = DomWriter(path)
-            data_dict = {}
-            for row in self.table.row_data:
-                data_dict["name"] = row[0]
-                data_dict["group"] = row[1]
-                data_dict["sick"] = row[2]
-                data_dict["skip"] = row[3]
-                data_dict["other"] = row[4]
-
-                dom.create_xml_student(data_dict)
-            dom.create_xml_file()
+    def get_account_info(self):
+        name = ""
+        credits = ""
+        tanks = []
+        return name, credits, tanks
+    #get player info: name, credits, tanks [1,2,3] - has all
 
 
-    def add_new_student_in_table(self, row):
-        try:
-            self.table.row_data.insert(
-                len(self.table.row_data),
-                (
-                    row[0],
-                    row[1],
-                    row[2],
-                    row[3],
-                    row[4],
-                    str( int(row[2]) + int(row[3]) + int(row[4]) )
-                    )
-                )
-        except ValueError as v:
-            pass
-
-    @staticmethod
-    def get_surname(fio: str):
-        return fio.split()[1]
-
-
-    def refresh_students_in_table(self):
-        try:
-            self.table.row_data += self._not_filtered
-        except ValueError as v:
-            pass
-        self._not_filtered = []
-
-
-    def select_students_by_filters(self, filters: list):
-        selected_students = []
-
-        for row in self.table.row_data:
-            # print(row)
-            # wave 1
-            if filters[0]: # fio
-                fio = self.get_surname(row[0])
-                filter_fio = filters[0]
-                if fio != filter_fio:
-                    selected_students.append(tuple(row))
-                    continue
-            # wave 2
-            if filters[1] and row[1] != filters[1]: # group
-                    selected_students.append(tuple(row))
-                    continue
-            # wave 3
-            for i in range(2, len(filters)):
-                if filters[i]: # sick, skip, other, total
-                    if re.match(r'^\d+-\d+$', filters[i]):
-                        start, end = filters[i].split('-')
-                        if int(row[i]) not in range(int(start), int(end)+1):
-                            selected_students.append(tuple(row))
-                            continue
-                    elif int(row[i]) != int(filters[i]):
-                        selected_students.append(tuple(row))
-                        continue 
-        return selected_students
-
-
-    def filter_students_in_table(self, filters: list):
-        ''' filter a student in Table according to filters parameters '''
-        self._not_filtered = self.select_students_by_filters(filters=filters)
-        for row in self._not_filtered:
-            try:
-                self.table.row_data.remove(row)
-            except Exception as e:
-                # print(e.__str__())
-                pass
-    
-    
-    @staticmethod
-    def empty_filters(filters):
-        for filt in filters:
-            if filt != '':
-                return False
-        return True
-
-
-    def delete_students_from_table(self, filters):
-        ''' delete a students that are in _not_filtered list '''
-        unlucky_count = 0
-        if self.empty_filters(filters):
-            return unlucky_count
-        lucky_students = self.select_students_by_filters(filters=filters)
-        for row in self.table.row_data[:]:
-            # print(row)
-            # print(self.table.row_data)
-            if row not in lucky_students:
-                try:
-                    self.table.row_data.remove(row)
-                    unlucky_count += 1
-                except Exception as e:
-                    # print(e.__str__())
-                    pass
-        return unlucky_count
 
 
     def open_dialog(self, dialog, mode):
         self.dialog = dialog 
 
-
     def close_dialog(self, dialog_data: list=[]):
         data = dialog_data
         self.notify_observers(data)
-        self.dialog = None     
+        self.dialog = None

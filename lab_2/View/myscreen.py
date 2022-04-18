@@ -47,9 +47,17 @@ class MyScreenView(MDScreen, Observer):
 
     def close_dialog(self, dialog_data: list = []):
         if self.dialog.mode == "account":
-            self.controller.change_account(dialog_data)
+            posibility = self.controller.change_account(dialog_data)
+            if posibility:
+                Snackbar(text="Account was changed").open()
+            else:
+                Snackbar(text="Account wasn't changed").open()
         elif self.dialog.mode == "rename":
-            self.controller.change_nickname(dialog_data)
+            posibility = self.controller.change_nickname(dialog_data)
+            if posibility:
+                Snackbar(text="Name was changed").open()
+            else:
+                Snackbar(text="Name wasn't changed").open()
         self.dialog = None
 
 
@@ -79,7 +87,7 @@ class MyScreenView(MDScreen, Observer):
 
 
     # start battle popups
-    def open_start_battle_popup(self, obj):
+    def open_start_battle_popup(self):
         layout = GridLayout(cols=3, spacing=[10])
 
         # add imgs
@@ -123,7 +131,7 @@ class MyScreenView(MDScreen, Observer):
 
 
     # buy tanks popups
-    def open_buy_tank_popup(self, obj):
+    def open_buy_tank_popup(self):
         layout = GridLayout(cols=3, spacing=[10])
         prices = self.controller.get_prices()
 
@@ -173,7 +181,7 @@ class MyScreenView(MDScreen, Observer):
 
 
     # battle popups!!!!!!!!!!!!!!!!!!!!!!!!!!
-    def open_battle_popup(self, obj):
+    def open_battle_popup(self, battle):
         pass
 
     def close_battle_popup(self, obj):
@@ -185,7 +193,29 @@ class MyScreenView(MDScreen, Observer):
         self.controller.refresh()
 
     def build(self):
-        self.add_widget(self.model.table)
+        nickname, credits, tanks = self.controller.get_account_info()
+
+        layout = GridLayout(cols=3, spacing=[10])
+
+        widget1 = Widget()
+        nick_label = Label(text=nickname)
+        credits_label = Label(text=credits)
+        layout.add_widget(widget1)
+        layout.add_widget(nick_label)
+        layout.add_widget(credits_label)
+
+        if tanks.count(1) > 0:
+            img1 = Image(source='img/is.jpg')
+            layout.add_widget(img1)
+        if tanks.count(2) > 0:
+            img2 = Image(source='img/isu.jpg')
+            layout.add_widget(img2)
+        if tanks.count(3) > 0:
+            img3 = Image(source='img/t34.jpg')
+            layout.add_widget(img3)
+
+
+        self.add_widget(layout)
         return self
 
 

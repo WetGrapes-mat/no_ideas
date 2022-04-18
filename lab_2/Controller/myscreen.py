@@ -26,15 +26,26 @@ class MyScreenController:
     def get_screen(self):
         """The method creates get the view."""
         return self.view.build()
-    
+
+    # ready
     def change_account(self, data):
-        self.model.read_data_from_file(path=data)
-    
+        return self.model.choose_account(nick=data)
+
     def change_nickname(self, data):
-        self.model.write_data_in_file(path=data)
+        return self.model.change_nickname(newnick=data)
 
     def start_battle(self, tank):
-        self.model.server.start_battle(tank)
+        earned = self.model.start_battle(tank)
+        self.prize_popup(earned)
 
     def buy_tank(self, tank):
         self.model.server.buy_tank(tank)
+
+    def get_account_info(self):
+        self.model.server.get_account_info()
+
+    def prize_popup(self, earned):
+        self.view.open_prize_popup(earned)
+
+    def battle_popup(self, battle):
+        self.view.open_battle_popup(battle)

@@ -64,9 +64,6 @@ class Player:
                 available_to_purchase.append(c)
             else:
                 continue
-        print('Available to purchase tanks:')
-        for i in range(len(available_to_purchase)):
-            print(f'{available_to_purchase[i].get_name()} - {available_to_purchase[i].get_price()}')
         if available_to_purchase == []:
             print('You have all tanks!')
         else:

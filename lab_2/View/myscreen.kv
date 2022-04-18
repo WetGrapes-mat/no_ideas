@@ -6,6 +6,6 @@
             title: "WOT"
             type: "bottom"
 
-            right_action_items: [["gamepad", lambda x: root.play()], ["accounts", lambda x: root.open_dialog(mode="account")]]
-            left_action_items: [["border-color", lambda x: root.open_dialog(mode="rename")], ["money", lambda x: root.buy()]]
+            right_action_items: [["gamepad", lambda x: root.open_start_battle_popup()], ["accounts", lambda x: root.open_dialog(mode="account")]]
+            left_action_items: [["border-color", lambda x: root.open_dialog(mode="rename")], ["money", lambda x: root.open_buy_tank_popup()]]
 
