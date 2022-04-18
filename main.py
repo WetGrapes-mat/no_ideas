@@ -1,7 +1,7 @@
 from kivymd.app import MDApp
 from kivymd.uix.datatables import MDDataTable
 
-from lab_2.Controller.myscreen import MyScreenController
+from Controller.myscreen import MyScreenController
 from Model.myscreen import MyScreenModel
 
 from kivy.core.window import Window
