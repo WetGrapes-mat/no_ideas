@@ -56,7 +56,7 @@ class Player:
             print('WRONG INPUT!')
             self.lets_battle(server)
 
-    def buy_tank(self, server: Server) -> None:
+    def buy_tank(self, server: Server, tank) -> bool:
         tanks: list[Tank] = server.get_tank_list()
         available_to_purchase: list[Tank] = []
         for c in tanks:
@@ -70,38 +70,33 @@ class Player:
             print('exit')
 
         if available_to_purchase != []:
-            choice: str = input()
+            choice: str = str(tank)
             for i in range(len(available_to_purchase)):
-                if choice == 'exit':
-                    return
-                elif choice == available_to_purchase[i].get_name():
+                if choice == str(available_to_purchase[i].get_id()):
                     new_tank: Tank = available_to_purchase[i]
                     if self.__credits >= new_tank.get_price():
                         self.__credits -= new_tank.get_price()
                         self.__tanks.append(new_tank)
                         Server.set_players_in_file(server.get_player_list())
+                        return True
                     else:
                         print('Not enough credits :(')
-                        # self.buy_tank(server)
-                    break
-            else:
-                print('WRONG INPUT!')
-                # self.buy_tank(server)
+                        return False
+        else:
+            return False
 
-    def change_nickname(self, server) -> None:
-        new_nickname: str = input('Enter new nickname: ')
-        print('Are you sure? Changing your nickname costs 50_000 credits')
-        print('yes\nno')
-        choice: str = input()
-        if choice == 'yes':
+
+    def change_nickname(self, server, nickname) -> bool:
+        new_nickname: str = nickname
+        if nickname == '':
+            return False
+        if self.__credits >= 50_000:
             self.__nickname = new_nickname
             self.__credits -= 50_000
             Server.set_players_in_file(server.get_player_list())
-        elif choice == 'no':
-            return
+            return True
         else:
-            print('WRONG INPUT!')
-            self.change_nickname(server)
+            return False
 
 
 class Tank:

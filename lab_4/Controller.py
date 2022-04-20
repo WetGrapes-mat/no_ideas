@@ -39,7 +39,7 @@ class MyScreenController:
         self.prize_popup(earned)
 
     def buy_tank(self, tank):
-        self.model.buy_tank(tank)
+        return self.model.buy_tank(tank)
 
     def get_account_info(self):
         return self.model.get_account_info()

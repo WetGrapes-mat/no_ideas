@@ -50,9 +50,11 @@ class MyScreenModel:
         return self.player.lets_battle(self.s)
 
     def get_account_info(self):
-        name = ""
-        credts = ""
+        name = self.player.get_nickname()
+        credts = str(self.player.get_credits())
         tanks = []
+        for i in self.player.get_tanks():
+            tanks.append(i.get_id())
         return name, credts, tanks
 
     # get player info: name, credits, tanks [1,2,3] - has all

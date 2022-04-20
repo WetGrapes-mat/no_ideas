@@ -1,11 +1,17 @@
 <MyScreenView>:
     # Will always be at the bottom of the screen.
-    MDBottomAppBar:
+    canvas.before:
+        Color:
+            rgba: (0,0,0,1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
-        MDToolbar:
-            title: "WOT"
-            type: "bottom"
 
-            right_action_items: [["gamepad", lambda x: root.open_start_battle_popup()], ["accounts", lambda x: root.open_dialog(mode="account")]]
-            left_action_items: [["border-color", lambda x: root.open_dialog(mode="rename")], ["money", lambda x: root.open_buy_tank_popup()]]
+    MDToolbar:
+        title: "WOT"
+        md_bg_color: app.theme_cls.accent_color
+
+        right_action_items: [["gamepad", lambda x: root.open_start_battle_popup()], ["account", lambda x: root.open_dialog(mode="account")]]
+        left_action_items: [["border-color", lambda x: root.open_dialog(mode="rename")], ["shopping", lambda x: root.open_buy_tank_popup()]]
 

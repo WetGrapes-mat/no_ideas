@@ -25,7 +25,9 @@ class MyScreenView(MDScreen, Observer):
 
     # cont = ObjectProperty()
     # mod = ObjectProperty()
-
+    information = {'is': None,
+                   'isu': None,
+                   't34': None}
     def __init__(self, c, m, **kw):
         super().__init__(**kw)
 
@@ -59,9 +61,12 @@ class MyScreenView(MDScreen, Observer):
                 Snackbar(text="Name was changed").open()
             else:
                 Snackbar(text="Name wasn't changed").open()
+        self.update()
         self.dialog = None
 
     # Button pressed actions
+
+
     def play_is(self, obj):
         self.controller.start_battle(1)
 
@@ -98,14 +103,21 @@ class MyScreenView(MDScreen, Observer):
 
         # add buttons
         button1 = Button(text='Start',
-                         on_press=self.play_is)
+                         on_press=self.play_is,
+                         disabled=False)
         layout.add_widget(button1)
         button2 = Button(text='Start',
-                         on_press=self.play_su)
+                         on_press=self.play_su,
+                         disabled=False)
         layout.add_widget(button2)
         button3 = Button(text='Start',
-                         on_press=self.play_t34)
+                         on_press=self.play_t34,
+                         disabled=False)
         layout.add_widget(button3)
+
+
+
+
 
         # add last row with close button
         widget1 = Widget()
@@ -146,14 +158,29 @@ class MyScreenView(MDScreen, Observer):
 
         # add buttons
         button1 = Button(text='Buy',
-                         on_press=self.buy_is)
+                         on_press=self.buy_is,
+                         disabled=False)
         layout.add_widget(button1)
         button2 = Button(text='Buy',
-                         on_press=self.buy_su)
+                         on_press=self.buy_su,
+                         disabled=False)
         layout.add_widget(button2)
         button3 = Button(text='Buy',
-                         on_press=self.buy_t34)
+                         on_press=self.buy_t34,
+                         disabled=False)
         layout.add_widget(button3)
+
+        for i in self.model.player.get_tanks():
+            if i.get_id() == 1:
+                button3.disabled = True
+                button3.text = 'U have'
+            elif i.get_id() == 2:
+                button1.disabled = True
+                button1.text = 'U have'
+            elif i.get_id() == 3:
+                button2.disabled = True
+                button2.text = 'U have'
+
 
         # add last row with close button
         widget1 = Widget()
@@ -184,6 +211,21 @@ class MyScreenView(MDScreen, Observer):
     def refresh(self):
         self.controller.refresh()
 
+    def update(self):
+        nickname, credts, tanks = self.controller.get_account_info()
+        self.information['nik'].text = nickname
+        self.information['credits'].text = credts
+        self.information['t34'].source = 'img/off.svg.png'
+        self.information['is'].source = 'img/off.svg.png'
+        self.information['isu'].source = 'img/off.svg.png'
+        for i in tanks:
+            if i == 1:
+                self.information['t34'].source = 'img/t34.jpg'
+            elif i == 2:
+                self.information['is'].source = 'img/is.jpg'
+            if i == 3:
+                self.information['isu'].source = 'img/isu.jpg'
+
     def build(self):
         nickname, credts, tanks = self.controller.get_account_info()
 
@@ -191,22 +233,30 @@ class MyScreenView(MDScreen, Observer):
 
         widget1 = Widget()
         nick_label = Label(text=nickname)
-        credits_label = Label(text=credts)
+        credits_label = Label(text='Кредиты: ' + credts)
+        self.information['nik'] = nick_label
+        self.information['credits'] = credits_label
+
         layout.add_widget(widget1)
         layout.add_widget(nick_label)
         layout.add_widget(credits_label)
 
         if tanks.count(1) > 0:
-            img1 = Image(source='img/is.jpg')
+            img1 = Image(source='img/t34.jpg')
+            self.information['t34'] = img1
             layout.add_widget(img1)
         if tanks.count(2) > 0:
-            img2 = Image(source='img/isu.jpg')
+            img2 = Image(source='img/is.jpg')
+            self.information['is'] = img2
             layout.add_widget(img2)
         if tanks.count(3) > 0:
-            img3 = Image(source='img/t34.jpg')
+            img3 = Image(source='img/isu.jpg')
+            self.information['isu'] = img3
             layout.add_widget(img3)
 
         self.add_widget(layout)
+        # Builder.load_file(os.path.join(os.path.dirname(__file__), "myscreen.kv"))
+        print(self.information)
         return self
 
 
