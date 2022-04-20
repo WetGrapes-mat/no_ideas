@@ -33,7 +33,8 @@ while True:
             print(f'{c.get_name()}')
         print('exit')
         tank_name = input()
-        credits = player.lets_battle(s, tank_name)
+        credits, text = player.lets_battle(s, tank_name)
+        print(text)
         if credits != 0:
             print(f'You earned {credits} credits per battle')
 

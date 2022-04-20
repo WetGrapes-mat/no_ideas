@@ -189,14 +189,17 @@ class MyScreenView(MDScreen, Observer):
         # add buttons
         button1 = Button(text='Buy',
                          on_press=self.buy_is,
+                         #on_release=self.close_buy_tank_popup,
                          disabled=False)
         layout.add_widget(button1)
         button2 = Button(text='Buy',
                          on_press=self.buy_su,
+                         #on_release=self.close_buy_tank_popup,
                          disabled=False)
         layout.add_widget(button2)
         button3 = Button(text='Buy',
                          on_press=self.buy_t34,
+                         #on_release=self.close_buy_tank_popup,
                          disabled=False)
         layout.add_widget(button3)
 

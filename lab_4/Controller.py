@@ -35,7 +35,7 @@ class MyScreenController:
         return self.model.change_nickname(newnick=data)
 
     def start_battle(self, tank):
-        earned = self.model.start_battle(tank)
+        earned, text = self.model.start_battle(tank)
         self.prize_popup(earned)
 
     def buy_tank(self, tank):
