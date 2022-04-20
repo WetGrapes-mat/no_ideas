@@ -14,10 +14,7 @@ from server_wot import Server
 
 
 class MyScreenModel:
-
-
     _not_filtered = []
-
 
     def __init__(self):
         self.dialog = None
@@ -29,15 +26,12 @@ class MyScreenModel:
     def add_observer(self, observer):
         self._observers.append(observer)
 
-
     def remove_observer(self, observer):
         self._observers.remove(observer)
-
 
     def notify_observers(self, data):
         for x in self._observers:
             x.model_is_changed(data)
-
 
     def choose_account(self, nick: str):
         for i in range(len(self.s.get_player_list())):
@@ -60,13 +54,13 @@ class MyScreenModel:
         credts = ""
         tanks = []
         return name, credts, tanks
-    #get player info: name, credits, tanks [1,2,3] - has all
 
+    # get player info: name, credits, tanks [1,2,3] - has all
 
     def open_dialog(self, dialog, mode):
-        self.dialog = dialog 
+        self.dialog = dialog
 
-    def close_dialog(self, dialog_data: list=[]):
+    def close_dialog(self, dialog_data: list = []):
         data = dialog_data
         self.notify_observers(data)
         self.dialog = None

@@ -20,11 +20,9 @@ class MyScreenController:
         self.model = model
         self.view = MyScreenView(self, self.model)
 
-    
     def refresh(self):
         self.model.refresh_students_in_table()
 
-        
     def get_screen(self):
         """The method creates get the view."""
         return self.view.build()

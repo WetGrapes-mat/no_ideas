@@ -2,8 +2,6 @@ import os
 
 import dialog_windows as window
 
-
-
 # kivy
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
@@ -24,6 +22,7 @@ from observer import Observer
 
 class MyScreenView(MDScreen, Observer):
     """ A class that implements the visual presentation `MyScreenModel`. """
+
     # cont = ObjectProperty()
     # mod = ObjectProperty()
 
@@ -62,7 +61,6 @@ class MyScreenView(MDScreen, Observer):
                 Snackbar(text="Name wasn't changed").open()
         self.dialog = None
 
-
     # Button pressed actions
     def play_is(self, obj):
         self.controller.start_battle(1)
@@ -85,8 +83,6 @@ class MyScreenView(MDScreen, Observer):
     def model_is_changed(self, data):
         """ The method is called when the model changes. """
         self.close_dialog(data)
-
-
 
     # start battle popups
     def open_start_battle_popup(self):
@@ -129,8 +125,6 @@ class MyScreenView(MDScreen, Observer):
 
     def close_start_battle_popup(self, obj):
         self.start_battle_popup.dismiss()
-
-
 
     # buy tanks popups
     def open_buy_tank_popup(self):
@@ -180,16 +174,12 @@ class MyScreenView(MDScreen, Observer):
     def close_buy_tank_popup(self, obj):
         self.buy_tank_popup.dismiss()
 
-
-
     # battle popups!!!!!!!!!!!!!!!!!!!!!!!!!!
     def open_battle_popup(self, battle):
         pass
 
     def close_battle_popup(self, obj):
         self.battle_popup.dismiss()
-
-
 
     def refresh(self):
         self.controller.refresh()
@@ -215,7 +205,6 @@ class MyScreenView(MDScreen, Observer):
         if tanks.count(3) > 0:
             img3 = Image(source='img/t34.jpg')
             layout.add_widget(img3)
-
 
         self.add_widget(layout)
         return self
