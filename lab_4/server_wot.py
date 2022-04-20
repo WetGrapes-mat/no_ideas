@@ -82,11 +82,11 @@ class Player:
                         Server.set_players_in_file(server.get_player_list())
                     else:
                         print('Not enough credits :(')
-                        self.buy_tank(server)
+                        # self.buy_tank(server)
                     break
             else:
                 print('WRONG INPUT!')
-                self.buy_tank(server)
+                # self.buy_tank(server)
 
     def change_nickname(self, server) -> None:
         new_nickname: str = input('Enter new nickname: ')

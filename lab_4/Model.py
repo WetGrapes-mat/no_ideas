@@ -9,22 +9,13 @@
 import re
 
 # parsers
-from Utility.parsers.dom_writer import DomWriter
-from Utility.parsers.sax_reader import SaxReader
+# from Utility import *
+from server_wot import Server
 
 
 class MyScreenModel:
-    """
-    The MyScreenModel class is a data model implementation. The model stores
-    the values of the variables `c`, `d` and their sum. The model provides an
-    interface through which to work with stored values. The model contains
-    methods for registration, deletion and notification observers.
 
-    The model is (primarily) responsible for the logic of the application.
-    MyScreenModel class task is to add two numbers.
-    """
 
-    # list of row data that are hidden
     _not_filtered = []
 
 
@@ -32,7 +23,7 @@ class MyScreenModel:
         self.dialog = None
         self._observers = []
         self.s = Server()
-        self.player = s.get_player_list()[0]
+        self.player = self.s.get_player_list()[0]
 
     # observers
     def add_observer(self, observer):
@@ -64,15 +55,12 @@ class MyScreenModel:
     def start_battle(self, tank):
         return self.player.lets_battle(self.s)
 
-
     def get_account_info(self):
         name = ""
-        credits = ""
+        credts = ""
         tanks = []
-        return name, credits, tanks
+        return name, credts, tanks
     #get player info: name, credits, tanks [1,2,3] - has all
-
-
 
 
     def open_dialog(self, dialog, mode):

@@ -1,6 +1,8 @@
 import os
 
-import Utility.dialog_windows as window
+import dialog_windows as window
+
+
 
 # kivy
 from kivy.properties import ObjectProperty
@@ -17,20 +19,20 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.screen import Screen
 from kivymd.uix.snackbar import Snackbar
 
-from Utility.observer import Observer
+from observer import Observer
 
 
 class MyScreenView(MDScreen, Observer):
     """ A class that implements the visual presentation `MyScreenModel`. """
+    # cont = ObjectProperty()
+    # mod = ObjectProperty()
 
-    # <Controller.myscreen_controller.MyScreenController object>.
-    controller = ObjectProperty()
-    # <Model.myscreen.MyScreenModel object>.
-    model = ObjectProperty()
-
-    def __init__(self, **kw):
+    def __init__(self, c, m, **kw):
         super().__init__(**kw)
-        self.model.add_observer(self)  # register the view as an observer
+
+        self.model = m
+        self.model.add_observer(self)
+        self.controller = c
         self.screen = Screen()
         self.start_battle_popup = Popup()
         self.buy_tank_popup = Popup()
@@ -121,7 +123,7 @@ class MyScreenView(MDScreen, Observer):
         self.start_battle_popup = Popup(title="Start battle",
                                         content=layout,
                                         size_hint=(None, None),
-                                        size=(400, 250),
+                                        size=(1000, 850),
                                         auto_dismiss=False)
         self.start_battle_popup.open()
 
@@ -171,7 +173,7 @@ class MyScreenView(MDScreen, Observer):
         self.buy_tank_popup = Popup(title="Buy tank",
                                     content=layout,
                                     size_hint=(None, None),
-                                    size=(400, 250),
+                                    size=(1000, 850),
                                     auto_dismiss=False)
         self.buy_tank_popup.open()
 
@@ -193,13 +195,13 @@ class MyScreenView(MDScreen, Observer):
         self.controller.refresh()
 
     def build(self):
-        nickname, credits, tanks = self.controller.get_account_info()
+        nickname, credts, tanks = self.controller.get_account_info()
 
         layout = GridLayout(cols=3, spacing=[10])
 
         widget1 = Widget()
         nick_label = Label(text=nickname)
-        credits_label = Label(text=credits)
+        credits_label = Label(text=credts)
         layout.add_widget(widget1)
         layout.add_widget(nick_label)
         layout.add_widget(credits_label)

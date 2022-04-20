@@ -1,4 +1,6 @@
-from View.myscreen import MyScreenView
+# from View.myscreen import MyScreenView
+
+from View import MyScreenView
 
 
 class MyScreenController:
@@ -16,7 +18,7 @@ class MyScreenController:
         The constructor creates the view.
         """
         self.model = model
-        self.view = MyScreenView(controller=self, model=self.model)
+        self.view = MyScreenView(self, self.model)
 
     
     def refresh(self):
@@ -42,10 +44,20 @@ class MyScreenController:
         self.model.buy_tank(tank)
 
     def get_account_info(self):
-        self.model.get_account_info()
+        return self.model.get_account_info()
 
     def prize_popup(self, earned):
         self.view.open_prize_popup(earned)
 
     def battle_popup(self, battle):
         self.view.open_battle_popup(battle)
+
+    def get_prices(self):
+        tank_list = self.model.s.get_tank_list()
+        temp = []
+        for _ in tank_list:
+            temp.append(str(_.get_price()))
+        return temp[:]
+
+    def dialog(self, mode, dialog):
+        self.model.open_dialog(mode, dialog)
