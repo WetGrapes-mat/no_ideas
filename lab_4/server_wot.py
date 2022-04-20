@@ -56,23 +56,27 @@ class Player:
             print('WRONG INPUT!')
             self.lets_battle(server)
 
-    def buy_tank(self, server: Server, tank) -> bool:
+    def find_available_to_purchase(self, server: Server):
         tanks: list[Tank] = server.get_tank_list()
         available_to_purchase: list[Tank] = []
-        for c in tanks:
-            if c not in self.__tanks:
-                available_to_purchase.append(c)
-            else:
-                continue
-        if available_to_purchase == []:
+        if tanks == self.__tanks:
             print('You have all tanks!')
         else:
-            print('exit')
+            for c in tanks:
+                if c not in self.__tanks:
+                    available_to_purchase.append(c)
+                else:
+                    continue
+        return available_to_purchase
 
-        if available_to_purchase != []:
+    def buy_tank(self, server: Server, tank) -> bool:
+        tanks: list[Tank] = server.get_tank_list()
+        available_to_purchase: list[Tank] = self.find_available_to_purchase(server)
+
+        if available_to_purchase:
             choice: str = str(tank)
             for i in range(len(available_to_purchase)):
-                if choice == str(available_to_purchase[i].get_id()):
+                if choice == str(available_to_purchase[i].get_name()):
                     new_tank: Tank = available_to_purchase[i]
                     if self.__credits >= new_tank.get_price():
                         self.__credits -= new_tank.get_price()
@@ -84,7 +88,6 @@ class Player:
                         return False
         else:
             return False
-
 
     def change_nickname(self, server, nickname) -> bool:
         new_nickname: str = nickname

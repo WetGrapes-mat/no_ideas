@@ -1,13 +1,14 @@
 {
   "player": [
     {
-      "nickname": "yyyy",
+      "nickname": "Logan_H",
       "won_battles": 104,
       "battles": 220,
-      "credits": 119000000,
+      "credits": 120350000,
       "tanks": [
         1,
-        2
+        2,
+        3
       ]
     },
     {
