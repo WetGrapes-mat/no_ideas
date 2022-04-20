@@ -32,41 +32,31 @@ class Player:
     def get_tanks(self) -> list:
         return self.__tanks
 
-    def lets_battle(self, server: Server) -> None:
-        print('Choose the tank:')
+    def lets_battle(self, server: Server, tank_name: str) -> int:
         tanks: list[Tank] = self.__tanks
         for i in range(len(tanks)):
-            print(tanks[i].get_name())
-        print('exit')
-        choice: str = input()
-        for i in range(len(tanks)):
-            if choice == 'exit':
-                return
-            elif choice == tanks[i].get_name():
+            if tank_name == 'exit':
+                return 0
+            elif tank_name == tanks[i].get_name():
                 my_tank: Tank = tanks[i]
                 earned_credits, battle_won = server.start_battle(my_tank, self)
                 self.__credits += earned_credits
-                print(f'Earned {earned_credits} credits per battle')
                 self.__won_battles += battle_won
                 self.__battles += 1
                 self.__win_rate = (self.__won_battles / self.__battles) * 100
                 Server.set_players_in_file(server.get_player_list())
-                break
+                return earned_credits
         else:
-            print('WRONG INPUT!')
-            self.lets_battle(server)
+            self.lets_battle(server, tank_name)
 
     def find_available_to_purchase(self, server: Server):
         tanks: list[Tank] = server.get_tank_list()
         available_to_purchase: list[Tank] = []
-        if tanks == self.__tanks:
-            print('You have all tanks!')
-        else:
-            for c in tanks:
-                if c not in self.__tanks:
-                    available_to_purchase.append(c)
-                else:
-                    continue
+        for c in tanks:
+            if c not in self.__tanks:
+                available_to_purchase.append(c)
+            else:
+                continue
         return available_to_purchase
 
     def buy_tank(self, server: Server, tank) -> bool:
@@ -84,7 +74,6 @@ class Player:
                         Server.set_players_in_file(server.get_player_list())
                         return True
                     else:
-                        print('Not enough credits :(')
                         return False
         else:
             return False

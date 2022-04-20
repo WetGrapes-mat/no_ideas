@@ -45,7 +45,7 @@ class MyScreenController:
         return self.model.get_account_info()
 
     def prize_popup(self, earned):
-        self.view.open_prize_popup(earned)
+        self.view.print_earned_money(earned)
 
     def battle_popup(self, battle):
         self.view.open_battle_popup(battle)

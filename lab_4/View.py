@@ -87,22 +87,22 @@ class MyScreenView(MDScreen, Observer):
 
 
     def play_is(self, obj):
-        self.controller.start_battle(1)
+        self.controller.start_battle('T-34')
 
     def buy_is(self, obj):
-        self.controller.buy_tank(1)
+        self.controller.buy_tank('T-34')
 
     def play_t34(self, obj):
-        self.controller.start_battle(2)
+        self.controller.start_battle('IS')
 
     def buy_t34(self, obj):
-        self.controller.buy_tank(2)
+        self.controller.buy_tank('IS')
 
     def play_su(self, obj):
-        self.controller.start_battle(3)
+        self.controller.start_battle('SU-100')
 
     def buy_su(self, obj):
-        self.controller.buy_tank(3)
+        self.controller.buy_tank('SU-100')
 
     def model_is_changed(self, data):
         """ The method is called when the model changes. """
@@ -113,6 +113,7 @@ class MyScreenView(MDScreen, Observer):
         layout = GridLayout(cols=3, spacing=[10])
 
         # add imgs
+
         img1 = Image(source='img/is.jpg')
         layout.add_widget(img1)
         img2 = Image(source='img/isu.jpg')
@@ -121,22 +122,32 @@ class MyScreenView(MDScreen, Observer):
         layout.add_widget(img3)
 
         # add buttons
-        button1 = Button(text='Start',
-                         on_press=self.play_is,
-                         disabled=False)
+        button1 = Button(text="You don't have this tank",
+                         on_press=self.close_start_battle_popup,
+                         on_release=self.play_is,
+                         disabled=True)
         layout.add_widget(button1)
-        button2 = Button(text='Start',
-                         on_press=self.play_su,
-                         disabled=False)
+        button2 = Button(text="You don't have this tank",
+                         on_press=self.close_start_battle_popup,
+                         on_release=self.play_su,
+                         disabled=True)
         layout.add_widget(button2)
-        button3 = Button(text='Start',
-                         on_press=self.play_t34,
-                         disabled=False)
+        button3 = Button(text="You don't have this tank",
+                         on_press=self.close_start_battle_popup,
+                         on_release=self.play_t34,
+                         disabled=True)
         layout.add_widget(button3)
 
-
-
-
+        for i in self.model.player.get_tanks():
+            if i.get_id() == 1:
+                button3.disabled = False
+                button3.text = 'Start'
+            elif i.get_id() == 2:
+                button1.disabled = False
+                button1.text = 'Start'
+            elif i.get_id() == 3:
+                button2.disabled = False
+                button2.text = 'Start'
 
         # add last row with close button
         widget1 = Widget()
@@ -192,13 +203,13 @@ class MyScreenView(MDScreen, Observer):
         for i in self.model.player.get_tanks():
             if i.get_id() == 1:
                 button3.disabled = True
-                button3.text = 'U have'
+                button3.text = 'You already have this tank'
             elif i.get_id() == 2:
                 button1.disabled = True
-                button1.text = 'U have'
+                button1.text = 'You already have this tank'
             elif i.get_id() == 3:
                 button2.disabled = True
-                button2.text = 'U have'
+                button2.text = 'You already have this tank'
 
 
         # add last row with close button
@@ -218,6 +229,7 @@ class MyScreenView(MDScreen, Observer):
         self.buy_tank_popup.open()
 
     def close_buy_tank_popup(self, obj):
+        self.update()
         self.buy_tank_popup.dismiss()
 
     # battle popups!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -516,22 +528,22 @@ class MyScreenView(MDScreen, Observer):
         layout.add_widget(nick_label)
         layout.add_widget(credits_label)
 
-        if tanks.count(1) > 0:
-            img1 = Image(source='img/t34.jpg')
-            self.information['t34'] = img1
-            layout.add_widget(img1)
-        if tanks.count(2) > 0:
-            img2 = Image(source='img/is.jpg')
-            self.information['is'] = img2
-            layout.add_widget(img2)
-        if tanks.count(3) > 0:
-            img3 = Image(source='img/isu.jpg')
-            self.information['isu'] = img3
-            layout.add_widget(img3)
+        img1 = Image(source='img/off.svg.png')
+        self.information['t34'] = img1
+        layout.add_widget(img1)
+        # if tanks.count(2) > 0:
+        img2 = Image(source='img/off.svg.png')
+        self.information['is'] = img2
+        layout.add_widget(img2)
+        # if tanks.count(3) > 0:
+        img3 = Image(source='img/off.svg.png')
+        self.information['isu'] = img3
+        layout.add_widget(img3)
 
         self.add_widget(layout)
         # Builder.load_file(os.path.join(os.path.dirname(__file__), "myscreen.kv"))
         print(self.information)
+        self.update()
         return self
 
 
