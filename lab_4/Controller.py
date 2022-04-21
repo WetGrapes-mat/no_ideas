@@ -36,7 +36,7 @@ class MyScreenController:
 
     def start_battle(self, tank):
         earned = self.model.start_battle(tank)
-        self.prize_popup(earned)
+        # self.prize_popup(earned)
 
     def buy_tank(self, tank):
         return self.model.buy_tank(tank)
@@ -47,8 +47,8 @@ class MyScreenController:
     def prize_popup(self, earned):
         self.view.open_prize_popup(earned)
 
-    def battle_popup(self, battle):
-        self.view.open_battle_popup(battle)
+    def battle_popup(self, battle,  mapname):
+        self.view.open_battle_popup(battle,  mapname)
 
     def get_prices(self):
         tank_list = self.model.s.get_tank_list()

@@ -87,16 +87,16 @@ class MyScreenView(MDScreen, Observer):
 
 
     def play_is(self, obj):
-        self.controller.start_battle(1)
-
-    def buy_is(self, obj):
-        self.controller.buy_tank(1)
-
-    def play_t34(self, obj):
         self.controller.start_battle(2)
 
-    def buy_t34(self, obj):
+    def buy_is(self, obj):
         self.controller.buy_tank(2)
+
+    def play_t34(self, obj):
+        self.controller.start_battle(1)
+
+    def buy_t34(self, obj):
+        self.controller.buy_tank(1)
 
     def play_su(self, obj):
         self.controller.start_battle(3)
@@ -218,6 +218,7 @@ class MyScreenView(MDScreen, Observer):
         self.buy_tank_popup.open()
 
     def close_buy_tank_popup(self, obj):
+        self.update()
         self.buy_tank_popup.dismiss()
 
     # battle popups!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -516,22 +517,23 @@ class MyScreenView(MDScreen, Observer):
         layout.add_widget(nick_label)
         layout.add_widget(credits_label)
 
-        if tanks.count(1) > 0:
-            img1 = Image(source='img/t34.jpg')
-            self.information['t34'] = img1
-            layout.add_widget(img1)
-        if tanks.count(2) > 0:
-            img2 = Image(source='img/is.jpg')
-            self.information['is'] = img2
-            layout.add_widget(img2)
-        if tanks.count(3) > 0:
-            img3 = Image(source='img/isu.jpg')
-            self.information['isu'] = img3
-            layout.add_widget(img3)
+        # if tanks.count(1) > 0:
+        img1 = Image(source='img/off.svg.png')
+        self.information['t34'] = img1
+        layout.add_widget(img1)
+        # if tanks.count(2) > 0:
+        img2 = Image(source='img/off.svg.png')
+        self.information['is'] = img2
+        layout.add_widget(img2)
+        # if tanks.count(3) > 0:
+        img3 = Image(source='img/off.svg.png')
+        self.information['isu'] = img3
+        layout.add_widget(img3)
 
         self.add_widget(layout)
         # Builder.load_file(os.path.join(os.path.dirname(__file__), "myscreen.kv"))
         print(self.information)
+        self.update()
         return self
 
 

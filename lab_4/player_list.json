@@ -2,13 +2,13 @@
   "player": [
     {
       "nickname": "Logan_H",
-      "won_battles": 104,
-      "battles": 220,
-      "credits": 120350000,
+      "won_battles": 105,
+      "battles": 224,
+      "credits": 120611400,
       "tanks": [
-        1,
         2,
-        3
+        3,
+        1
       ]
     },
     {

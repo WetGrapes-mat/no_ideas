@@ -47,7 +47,7 @@ class MyScreenModel:
         return self.player.buy_tank(self.s, tank)
 
     def start_battle(self, tank):
-        return self.player.lets_battle(self.s)
+        return self.player.lets_battle(self.s, tank)
 
     def get_account_info(self):
         name = self.player.get_nickname()
