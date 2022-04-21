@@ -87,16 +87,16 @@ class MyScreenView(MDScreen, Observer):
 
 
     def play_is(self, obj):
-        self.controller.start_battle('T-34')
-
-    def buy_is(self, obj):
-        self.controller.buy_tank('T-34')
-
-    def play_t34(self, obj):
         self.controller.start_battle('IS')
 
-    def buy_t34(self, obj):
+    def buy_is(self, obj):
         self.controller.buy_tank('IS')
+
+    def play_t34(self, obj):
+        self.controller.start_battle('T-34')
+
+    def buy_t34(self, obj):
+        self.controller.buy_tank('T-34')
 
     def play_su(self, obj):
         self.controller.start_battle('SU-100')

@@ -4,10 +4,11 @@
       "nickname": "deadinside",
       "won_battles": 110,
       "battles": 232,
-      "credits": 118449100,
+      "credits": 116949100,
       "tanks": [
         1,
-        3
+        3,
+        2
       ]
     },
     {
@@ -16,7 +17,6 @@
       "battles": 316,
       "credits": 386900,
       "tanks": [
-        1,
         3
       ]
     }
