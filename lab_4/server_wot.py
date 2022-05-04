@@ -39,13 +39,13 @@ class Player:
                 return 0, ''
             elif tank_name == tanks[i].get_name():
                 my_tank: Tank = tanks[i]
-                earned_credits, battle_won, text = server.start_battle(my_tank, self)
+                earned_credits, battle_won, text, view_info = server.start_battle(my_tank, self)
                 self.__credits += earned_credits
                 self.__won_battles += battle_won
                 self.__battles += 1
                 self.__win_rate = (self.__won_battles / self.__battles) * 100
                 Server.set_players_in_file(server.get_player_list())
-                return earned_credits, text
+                return earned_credits, text, view_info
         else:
             self.lets_battle(server, tank_name)
 
@@ -241,7 +241,7 @@ class Server:
             team_two.append(BattlePlayer(Bot(self)))
 
         battle: Battle = Battle(team_one, team_two, self.choose_map())
-        team_one, team_two, text = battle.simulate_battle()
+        team_one, team_two, text, view_info = battle.simulate_battle()
         hp: int = 0
           
         for p in team_one:
@@ -251,7 +251,8 @@ class Server:
         else:
             battle_won: int = 0
         earned_credits: int = self.count_prizes(team_one[0])
-        return earned_credits, battle_won, text
+        view_info['info'].append(earned_credits)
+        return earned_credits, battle_won, text, view_info
 
     def choose_map(self) -> str:
         maps: list[str] = ['Prohorovka', 'Malinovka', 'Himelsdorf', 'Ruinberg', 'Minsk', 'Berlin']
@@ -276,6 +277,7 @@ class Battle:
         self.__team_two_damage = [0] * 5
 
     def simulate_battle(self) -> tuple:
+        view_info = {}
         battle_process: str = 'team_one\n'
         battle_process += '-' * 30
         for i_1 in self.__team_one:
@@ -303,8 +305,10 @@ class Battle:
             if hp_1 == 0 or hp_2 == 0:
                 if hp_1 == 0:
                     battle_process += '{:^46}'.format('TEAM TWO WIN\n')
+                    view_info['info'] = ['taem two']
                 elif hp_2 == 0:
                     battle_process += '{:^46}'.format('TEAM ONE WIN\n')
+                    view_info['info'] = ['taem one']
                 break
 
             curr_dmg_1: dict = {}
@@ -362,6 +366,7 @@ class Battle:
                         battle_process += '{:^15} dmg done {:^5} {:^15}'.format(pair[0].get_nickname().rstrip(), damage,
                                                                     pair[1].get_nickname().rstrip())
                         battle_process += '\n'
+
                     elif pair[1].get_heal_points() < damage:
                         pair[1].take_self_damage(pair[1].get_heal_points())
                         pair[0].take_damage(pair[1].get_heal_points())
@@ -369,13 +374,15 @@ class Battle:
                         battle_process += '{:^15}  {:^11}  {:^15}'.format(pair[0].get_nickname().rstrip(), 'Killed',
                                                               pair[1].get_nickname().rstrip())
                         battle_process += '\n'
+                        view_info[pair[0].get_nickname().rstrip()] = pair[1].get_nickname().rstrip()
                 del curr_dmg[damage]
             else:
                 battle_process += '+=' * 25
                 battle_process += '\n'
 
             #time.sleep(1)
-        return self.__team_one, self.__team_two, battle_process
+        return self.__team_one, self.__team_two, battle_process, view_info
+
 
 
 class BattlePlayer:
