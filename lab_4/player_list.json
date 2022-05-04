@@ -1,21 +1,21 @@
 {
   "player": [
     {
-      "nickname": "Logan_H",
-      "won_battles": 105,
-      "battles": 224,
-      "credits": 120611400,
+      "nickname": "deadinside",
+      "won_battles": 110,
+      "battles": 232,
+      "credits": 116949100,
       "tanks": [
-        2,
+        1,
         3,
-        1
+        2
       ]
     },
     {
       "nickname": "lol",
       "won_battles": 204,
-      "battles": 312,
-      "credits": 233200,
+      "battles": 316,
+      "credits": 386900,
       "tanks": [
         1,
         3

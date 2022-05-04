@@ -20,13 +20,24 @@ def choose_account(s: Server) -> Player:
     player = s.get_player_list()[choice]
     return player
 
+
 command_list = ['start battle', 'buy a tank', 'change nickname', 'choose account', 'help', 'exit' ]
 player = choose_account(s)
 print(*command_list, sep='\n')
 while True:
     choice: str = input()
     if choice == command_list[0]:
-        player.lets_battle(s)
+        print('Choose the tank:')
+        tanks = player.get_tanks()
+        for c in tanks:
+            print(f'{c.get_name()}')
+        print('exit')
+        tank_name = input()
+        credits, text = player.lets_battle(s, tank_name)
+        print(text)
+        if credits != 0:
+            print(f'You earned {credits} credits per battle')
+
     elif choice == command_list[1]:
         print('Available to purchase tanks:')
         available_to_purchase = player.find_available_to_purchase(s)
@@ -35,7 +46,11 @@ while True:
                 print(f'{c.get_name()} - {c.get_price()}')
             print('Input tank name:')
             tank_name = input()
-            player.buy_tank(s, tank_name)
+            was_bought = player.buy_tank(s, tank_name)
+            if was_bought:
+                print('The tank was bought successfully!')
+            else:
+                print('Smth went wrong ;(')
 
         print('Waiting for the next command...')
     elif choice == command_list[2]:

@@ -32,42 +32,31 @@ class Player:
     def get_tanks(self) -> list:
         return self.__tanks
 
-    def lets_battle(self, server: Server, tank) -> None:
-        # print('Choose the tank:')
+    def lets_battle(self, server: Server, tank_name: str) -> tuple:
         tanks: list[Tank] = self.__tanks
         for i in range(len(tanks)):
-            print(tanks[i].get_name())
-        # print('exit')
-        choice: str = tank
-        for i in range(len(tanks)):
-            if choice == 'exit':
-                return
-            elif choice == tanks[i].get_id():
+            if tank_name == 'exit':
+                return 0, ''
+            elif tank_name == tanks[i].get_name():
                 my_tank: Tank = tanks[i]
-                earned_credits, battle_won = server.start_battle(my_tank, self)
+                earned_credits, battle_won, text = server.start_battle(my_tank, self)
                 self.__credits += earned_credits
-                print(f'Earned {earned_credits} credits per battle')
                 self.__won_battles += battle_won
                 self.__battles += 1
                 self.__win_rate = (self.__won_battles / self.__battles) * 100
                 Server.set_players_in_file(server.get_player_list())
-                return earned_credits
-        # break
-        # else:
-        #     print('WRONG INPUT!')
-        #     self.lets_battle(server, tank)
+                return earned_credits, text
+        else:
+            self.lets_battle(server, tank_name)
 
     def find_available_to_purchase(self, server: Server):
         tanks: list[Tank] = server.get_tank_list()
         available_to_purchase: list[Tank] = []
-        if tanks == self.__tanks:
-            print('You have all tanks!')
-        else:
-            for c in tanks:
-                if c not in self.__tanks:
-                    available_to_purchase.append(c)
-                else:
-                    continue
+        for c in tanks:
+            if c not in self.__tanks:
+                available_to_purchase.append(c)
+            else:
+                continue
         return available_to_purchase
 
     def buy_tank(self, server: Server, tank) -> bool:
@@ -77,7 +66,7 @@ class Player:
         if available_to_purchase:
             choice: str = str(tank)
             for i in range(len(available_to_purchase)):
-                if choice == str(available_to_purchase[i].get_id()): # вот тут get_name()
+                if choice == str(available_to_purchase[i].get_name()):
                     new_tank: Tank = available_to_purchase[i]
                     if self.__credits >= new_tank.get_price():
                         self.__credits -= new_tank.get_price()
@@ -85,7 +74,6 @@ class Player:
                         Server.set_players_in_file(server.get_player_list())
                         return True
                     else:
-                        print('Not enough credits :(')
                         return False
         else:
             return False
@@ -253,7 +241,7 @@ class Server:
             team_two.append(BattlePlayer(Bot(self)))
 
         battle: Battle = Battle(team_one, team_two, self.choose_map())
-        team_one, team_two = battle.simulate_battle()
+        team_one, team_two, text = battle.simulate_battle()
         hp: int = 0
           
         for p in team_one:
@@ -263,7 +251,7 @@ class Server:
         else:
             battle_won: int = 0
         earned_credits: int = self.count_prizes(team_one[0])
-        return earned_credits, battle_won
+        return earned_credits, battle_won, text
 
     def choose_map(self) -> str:
         maps: list[str] = ['Prohorovka', 'Malinovka', 'Himelsdorf', 'Ruinberg', 'Minsk', 'Berlin']
@@ -288,18 +276,22 @@ class Battle:
         self.__team_two_damage = [0] * 5
 
     def simulate_battle(self) -> tuple:
-        print('team_one')
-        print('-'*30)
+        battle_process: str = 'team_one\n'
+        battle_process += '-' * 30
         for i_1 in self.__team_one:
-            print('{} -- {}'.format(i_1.get_nickname().rstrip(), i_1.get_tank().get_name()))
-        print('='*30)
-        print('team_two')
-        print('-'*30)
+            battle_process += '\n{} -- {}'.format(i_1.get_nickname().rstrip(), i_1.get_tank().get_name())
+        battle_process += '\n'
+        battle_process += '='*30
+        battle_process += '\nteam_two\n'
+        battle_process += '-' * 30
         for i_2 in self.__team_two:
-            print('{} -- {}'.format(i_2.get_nickname().rstrip(), i_2.get_tank().get_name()))
-        print('+=' * 25)
-        print('{:^46}'.format('Lets Battle'))
-        print('+=' * 25)
+            battle_process += '\n{} -- {}'.format(i_2.get_nickname().rstrip(), i_2.get_tank().get_name())
+        battle_process += '\n'
+        battle_process += '+=' * 25
+        battle_process += '\n{:^46}'.format('Lets Battle')
+        battle_process += '\n'
+        battle_process += '+=' * 25
+        battle_process += '\n'
         while True:
             hp_1: int = 0
             hp_2: int = 0
@@ -310,9 +302,9 @@ class Battle:
 
             if hp_1 == 0 or hp_2 == 0:
                 if hp_1 == 0:
-                    print('{:^46}'.format('TEAM TWO WIN'))
+                    battle_process += '{:^46}'.format('TEAM TWO WIN\n')
                 elif hp_2 == 0:
-                    print('{:^46}'.format('TEAM ONE WIN'))
+                    battle_process += '{:^46}'.format('TEAM ONE WIN\n')
                 break
 
             curr_dmg_1: dict = {}
@@ -367,20 +359,23 @@ class Battle:
                     if pair[1].get_heal_points() > damage:
                         pair[1].take_self_damage(damage)
                         pair[0].take_damage(damage)
-                        print('{:^15} dmg done {:^5} {:^15}'.format(pair[0].get_nickname().rstrip(), damage,
-                                                                    pair[1].get_nickname().rstrip()))
+                        battle_process += '{:^15} dmg done {:^5} {:^15}'.format(pair[0].get_nickname().rstrip(), damage,
+                                                                    pair[1].get_nickname().rstrip())
+                        battle_process += '\n'
                     elif pair[1].get_heal_points() < damage:
                         pair[1].take_self_damage(pair[1].get_heal_points())
                         pair[0].take_damage(pair[1].get_heal_points())
                         pair[0].take_frags()
-                        print('{:^15}  {:^11}  {:^15}'.format(pair[0].get_nickname().rstrip(), 'Killed',
-                                                              pair[1].get_nickname().rstrip()))
+                        battle_process += '{:^15}  {:^11}  {:^15}'.format(pair[0].get_nickname().rstrip(), 'Killed',
+                                                              pair[1].get_nickname().rstrip())
+                        battle_process += '\n'
                 del curr_dmg[damage]
             else:
-                print('+='*25)
+                battle_process += '+=' * 25
+                battle_process += '\n'
 
-            time.sleep(1)
-        return self.__team_one, self.__team_two
+            #time.sleep(1)
+        return self.__team_one, self.__team_two, battle_process
 
 
 class BattlePlayer:
