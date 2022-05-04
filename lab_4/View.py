@@ -30,22 +30,6 @@ class MyScreenView(MDScreen, Observer):
                    'isu': None,
                    't34': None}
 
-    # players imgs
-    img_1 = Image()
-    img_2 = Image()
-    img_3 = Image()
-    img_4 = Image()
-    img_5 = Image()
-    img_6 = Image()
-    img_7 = Image()
-    img_8 = Image()
-    img_9 = Image()
-    img_10 = Image()
-    img_11 = Image()
-    img_12 = Image()
-    img_13 = Image()
-    img_14 = Image()
-
 
     def __init__(self, c, m, **kw):
         super().__init__(**kw)
@@ -235,268 +219,45 @@ class MyScreenView(MDScreen, Observer):
         self.update()
         self.buy_tank_popup.dismiss()
 
-    # battle popups!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    def open_battle_popup(self, battle, mapname):
-        # battle = [ ("nick",<num_tank>),("nick", <num_tank>)  ]
-        # num_tank: 1-IS, 2 - T34, 3 - SU
-        # odd - 1st team
-        # even - 2nd team
-        layout = GridLayout(cols=3, spacing=[10])
+    def open_battle_popup(self, credits, text, info):
+        layout = BoxLayout(orientation="vertical")
 
-        # map name row
-        widget1 = Widget()
-        widget2 = Widget()
-        mapname_label = Label(text=mapname, size_hint=(1, .1))
-        layout.add_widget(widget1)
-        layout.add_widget(mapname_label)
-        layout.add_widget(widget2)
+        for itteration in info.key:
+            for event in itteration:
+                if len(event) == 3:
+                    event_label = Label(text="{:^15} damaged {:^5} {:^15} ".format(event[0].rstrip(),
+                                                                                   event[1].rstrip(),
+                                                                                   event[2].rstrip()))
+                    layout.add_widget(event_label)
+                if len(event) == 2:
+                    event_label = Label(text="{:^15}  {:^11}  {:^15}".format(event[0].rstrip(),
+                                                                             'Killed',
+                                                                             event[1].rstrip()))
+                    layout.add_widget(event_label)
 
-        # players
+        text_label = Label(text="Boobs", size_hint=(1, 0.8))
+        layout.add_widget(text_label)
 
-        nick, tank = battle[0]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_1 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_1)
-        if tank == 2:
-            self.img_1 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_1)
-        if tank == 3:
-            self.img_1 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_1)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
+        credits_label = Label(text="You earned {} credits for this battle".format(credits),
+                              size_hint=(1, 0.1))
+        layout.add_widget(credits_label)
 
-        layout.add_widget(player_layout)
-        widget1 = Widget()
-        layout.add_widget(widget1)
+        close_button = Button(text='Close',
+                              size_hint=(1, 0.1),
+                              on_press=self.close_battle_popup)
+        layout.add_widget(close_button)
 
-        nick, tank = battle[1]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_2 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_2)
-        if tank == 2:
-            self.img_2 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_2)
-        if tank == 3:
-            self.img_2 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_2)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-        layout.add_widget(player_layout)
 
-        nick, tank = battle[2]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_3 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_3)
-        if tank == 2:
-            self.img_3 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_3)
-        if tank == 3:
-            self.img_3 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_3)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-
-        layout.add_widget(player_layout)
-        widget1 = Widget()
-        layout.add_widget(widget1)
-
-        nick, tank = battle[3]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_4 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_4)
-        if tank == 2:
-            self.img_4 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_4)
-        if tank == 3:
-            self.img_4 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_4)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-        layout.add_widget(player_layout)
-
-        nick, tank = battle[4]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_5 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_5)
-        if tank == 2:
-            self.img_5 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_5)
-        if tank == 3:
-            self.img_5 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_5)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-
-        layout.add_widget(player_layout)
-        widget1 = Widget()
-        layout.add_widget(widget1)
-
-        nick, tank = battle[5]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_6 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_6)
-        if tank == 2:
-            self.img_6 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_6)
-        if tank == 3:
-            self.img_6 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_6)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-        layout.add_widget(player_layout)
-
-        nick, tank = battle[6]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_7 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_7)
-        if tank == 2:
-            self.img_7 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_7)
-        if tank == 3:
-            self.img_7 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_7)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-
-        layout.add_widget(player_layout)
-        widget1 = Widget()
-        layout.add_widget(widget1)
-
-        nick, tank = battle[7]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_8 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_8)
-        if tank == 2:
-            self.img_8= Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_8)
-        if tank == 3:
-            self.img_8= Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_8)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-        layout.add_widget(player_layout)
-
-        nick, tank = battle[8]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_9 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_9)
-        if tank == 2:
-            self.img_9 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_9)
-        if tank == 3:
-            self.img_9 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_9)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-
-        layout.add_widget(player_layout)
-        widget1 = Widget()
-        layout.add_widget(widget1)
-
-        nick, tank = battle[9]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_10 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_10)
-        if tank == 2:
-            self.img_10 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_10)
-        if tank == 3:
-            self.img_10 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_10)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-        layout.add_widget(player_layout)
-
-        nick, tank = battle[10]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_11 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_11)
-        if tank == 2:
-            self.img_11 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_11)
-        if tank == 3:
-            self.img_11 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_11)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-
-        layout.add_widget(player_layout)
-        widget1 = Widget()
-        layout.add_widget(widget1)
-
-        nick, tank = battle[11]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_12 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_12)
-        if tank == 2:
-            self.img_12 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_12)
-        if tank == 3:
-            self.img_12 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_12)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-        layout.add_widget(player_layout)
-
-        nick, tank = battle[12]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_13 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_13)
-        if tank == 2:
-            self.img_13 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_13)
-        if tank == 3:
-            self.img_13 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_13)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-
-        layout.add_widget(player_layout)
-        widget1 = Widget()
-        layout.add_widget(widget1)
-
-        nick, tank = battle[13]
-        player_layout = BoxLayout(orientation='vertical')
-        if tank == 1:
-            self.img_14 = Image(source='img/is.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_14)
-        if tank == 2:
-            self.img_14 = Image(source='img/t34.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_14)
-        if tank == 3:
-            self.img_14 = Image(source='img/isu.jpg', size_hint=(1, 1))
-            player_layout.add_widget(self.img_14)
-        nick_label = Label(text=nick, size_hint=(1, .1))
-        player_layout.add_widget(nick_label)
-        layout.add_widget(player_layout)
-
-        self.battle_popup = Popup(title="Battle",
+        self.battle_popup = Popup(title="Battle finished",
                                         content=layout,
                                         size_hint=(None, None),
-                                        size=(400, 1000),
+                                        size=(600, 1000),
                                         auto_dismiss=False)
         self.battle_popup.open()
 
     def close_battle_popup(self, obj):
         self.battle_popup.dismiss()
-
-    def print_earned_money(self, earned_money):
-        Snackbar(text="You've just earned {} credits".format(earned_money)).open()
 
     def refresh(self):
         self.controller.refresh()

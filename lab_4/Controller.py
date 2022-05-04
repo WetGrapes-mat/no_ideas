@@ -35,8 +35,10 @@ class MyScreenController:
         return self.model.change_nickname(newnick=data)
 
     def start_battle(self, tank):
-        earned_credits, battle_won, text, view_info = self.model.start_battle(tank)
-        self.prize_popup(earned_credits)
+        self.view.close_start_battle_popup("")
+        credits, text, view_info = self.model.start_battle(tank)
+        self.battle_popup(credits, text)
+        self.view.update()
 
     def buy_tank(self, tank):
         return self.model.buy_tank(tank)
@@ -44,11 +46,8 @@ class MyScreenController:
     def get_account_info(self):
         return self.model.get_account_info()
 
-    def prize_popup(self, earned):
-        self.view.print_earned_money(earned)
-
-    def battle_popup(self, battle,  mapname):
-        self.view.open_battle_popup(battle,  mapname)
+    def battle_popup(self, credits, text):
+        self.view.open_battle_popup(credits, text)
 
     def get_prices(self):
         tank_list = self.model.s.get_tank_list()
