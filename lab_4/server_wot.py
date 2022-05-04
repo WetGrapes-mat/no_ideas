@@ -252,6 +252,7 @@ class Server:
             battle_won: int = 0
         earned_credits: int = self.count_prizes(team_one[0])
         view_info['info'].append(earned_credits)
+        print(view_info)
         return earned_credits, battle_won, text, view_info
 
     def choose_map(self) -> str:
@@ -277,7 +278,7 @@ class Battle:
         self.__team_two_damage = [0] * 5
 
     def simulate_battle(self) -> tuple:
-        view_info = {}
+        view_info = {'iter':[], 'info':[]}
         battle_process: str = 'team_one\n'
         battle_process += '-' * 30
         for i_1 in self.__team_one:
@@ -305,10 +306,11 @@ class Battle:
             if hp_1 == 0 or hp_2 == 0:
                 if hp_1 == 0:
                     battle_process += '{:^46}'.format('TEAM TWO WIN\n')
-                    view_info['info'] = ['taem two']
+                    view_info['info'].append('TEAM TWO WIN\n')
                 elif hp_2 == 0:
                     battle_process += '{:^46}'.format('TEAM ONE WIN\n')
-                    view_info['info'] = ['taem one']
+                    view_info['info'].append('TEAM ONE WIN\n')
+
                 break
 
             curr_dmg_1: dict = {}
@@ -355,7 +357,7 @@ class Battle:
 
             curr_dmg.update(curr_dmg_1)
             curr_dmg.update(curr_dmg_2)
-
+            tem = []
             for i in range(len(curr_dmg)):
                 damage = random.choice(list(curr_dmg.keys()))
                 pair = curr_dmg[damage]
@@ -366,6 +368,8 @@ class Battle:
                         battle_process += '{:^15} dmg done {:^5} {:^15}'.format(pair[0].get_nickname().rstrip(), damage,
                                                                     pair[1].get_nickname().rstrip())
                         battle_process += '\n'
+                        tem.append([pair[0].get_nickname().rstrip(), damage, pair[1].get_nickname().rstrip()])
+
 
                     elif pair[1].get_heal_points() < damage:
                         pair[1].take_self_damage(pair[1].get_heal_points())
@@ -374,11 +378,13 @@ class Battle:
                         battle_process += '{:^15}  {:^11}  {:^15}'.format(pair[0].get_nickname().rstrip(), 'Killed',
                                                               pair[1].get_nickname().rstrip())
                         battle_process += '\n'
-                        view_info[pair[0].get_nickname().rstrip()] = pair[1].get_nickname().rstrip()
+                        tem.append([pair[0].get_nickname().rstrip(), pair[1].get_nickname().rstrip()])
                 del curr_dmg[damage]
             else:
                 battle_process += '+=' * 25
                 battle_process += '\n'
+                view_info['iter'].append(tem[:])
+                tem.clear()
 
             #time.sleep(1)
         return self.__team_one, self.__team_two, battle_process, view_info
