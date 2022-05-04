@@ -37,7 +37,7 @@ class MyScreenController:
     def start_battle(self, tank):
         self.view.close_start_battle_popup("")
         credits, text, view_info = self.model.start_battle(tank)
-        self.battle_popup(credits, text)
+        self.battle_popup(view_info['iter'], view_info['info'])
         self.view.update()
 
     def buy_tank(self, tank):
@@ -46,8 +46,8 @@ class MyScreenController:
     def get_account_info(self):
         return self.model.get_account_info()
 
-    def battle_popup(self, credits, text):
-        self.view.open_battle_popup(credits, text)
+    def battle_popup(self, itterations, info):
+        self.view.open_battle_popup(itterations, info)
 
     def get_prices(self):
         tank_list = self.model.s.get_tank_list()

@@ -12,6 +12,7 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
+from kivy.uix.scrollview import ScrollView
 
 # kivyMD
 from kivymd.uix.screen import MDScreen
@@ -220,34 +221,43 @@ class MyScreenView(MDScreen, Observer):
         self.buy_tank_popup.dismiss()
 
 
-    def open_battle_popup(self, credits, text, info):
+    def open_battle_popup(self, itterations, info):
         layout = BoxLayout(orientation="vertical")
 
-        for itteration in info.key:
+        gl = GridLayout(cols=1)
+
+        for itteration in itterations:
             for event in itteration:
                 if len(event) == 3:
                     event_label = Label(text="{:^15} damaged {:^5} {:^15} ".format(event[0].rstrip(),
-                                                                                   event[1].rstrip(),
+                                                                                   str(event[1]),
                                                                                    event[2].rstrip()))
-                    layout.add_widget(event_label)
+                    gl.add_widget(event_label)
                 if len(event) == 2:
                     event_label = Label(text="{:^15}  {:^11}  {:^15}".format(event[0].rstrip(),
                                                                              'Killed',
                                                                              event[1].rstrip()))
-                    layout.add_widget(event_label)
+                    gl.add_widget(event_label)
+            it_final = Label(text="+=+")
+            gl.add_widget(it_final)
 
-        text_label = Label(text="Boobs", size_hint=(1, 0.8))
-        layout.add_widget(text_label)
+        root = ScrollView(size_hint=(1, 0.8))
+        root.add_widget(gl)
 
-        credits_label = Label(text="You earned {} credits for this battle".format(credits),
-                              size_hint=(1, 0.1))
+        layout.add_widget(root)
+
+        result_label = Label(text=info[0],
+                              size_hint=(1, 0.05))
+        layout.add_widget(result_label)
+
+        credits_label = Label(text="You earned {} credits for this battle".format(info[1]),
+                              size_hint=(1, 0.05))
         layout.add_widget(credits_label)
 
         close_button = Button(text='Close',
                               size_hint=(1, 0.1),
                               on_press=self.close_battle_popup)
         layout.add_widget(close_button)
-
 
         self.battle_popup = Popup(title="Battle finished",
                                         content=layout,
